@@ -8,6 +8,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var map=require('./maproutecontroller');
 
 var app = express();
 
@@ -22,67 +23,21 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(function(req,res,next){ res.send("404 lol")});
+app.use(function(err,req,res,next){
+  console.log(err);
+  res.send(err.message)
+})
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-var widgets= [
-  {
-    id: 1,
-    name: 'ololo',
-    price: 100.0
-  }
-]
-
-app.get('/', routes.index);
-app.get('/users', user.list);
-
-app.get('/widgets',function(req,res){
- res.send(widgets);
-});
-
-app.get('/widgets/:id',function(req,res){
- var indx=req.params.id-1;
- if(!widgets[indx]){
-  res.send('there is no such widget');
- }
- else
- {
-  res.send(widgets[indx])
- }
-});
-
-app.post('/widgets/add',function(req,res){
-  var indx=widgets.length+1;
-  widgets[widgets.length]={
-   id: indx,
-   name: req.body.name,
-   price: parseFloat(req.body.price)
-  }
-  console.log('added widget');
-  res.send('Added widget to list')
-});
-
-app.put('/widgets/:id/update',function(req,res){
- var indx=req.params.id-1;
- if(!widgets[indx]){res.send('no such')}
-  else{
-   widgets[indx]={
-   id: parseInt(req.params.id),
-   name: req.body.name,
-   price: parseFloat(req.body.price)
-  }
-  res.send('updated')
- }
-});
-
-app.del('/widgets/:id/delete',function(req,res){
- var indx=req.params.id-1;
- delete widgets[indx];
- res.send('widget deleted')
+var prefixes=['widgets'];
+prefixes.forEach(function(prefix){
+ map.mapRoute(app,prefix)
 })
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
