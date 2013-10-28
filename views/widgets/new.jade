@@ -1,0 +1,17 @@
+﻿extends layout
+block content
+  form(method='POST'
+       action='/widgets/create')
+   p Widget Name:
+     input(type='text'
+           name='name'
+           id='name'
+           required)
+   p Widget Price:
+     input(type='text'
+           name='price'
+           id='price'
+           required)
+   p
+     input(type='submit'
+           value='submit')

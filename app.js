@@ -9,7 +9,7 @@ var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
 var map=require('./maproutecontroller');
-
+var stylus=require('stylus');
 var app = express();
 
 // all environments
@@ -18,6 +18,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
+app.use(stylus.middleware({
+ src:__dirname+'/views',
+ dest:__dirname+'/public'
+}))
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);

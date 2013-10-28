@@ -1,0 +1,19 @@
+﻿extends layout
+block content
+  h1 Edit #{widget.name}
+  form(method='POST'
+       action="/widgets/#{widget.id}")
+    input(type='hidden'
+          name='_method'
+          value='put')
+    p Widget Name:
+      input(type='text'
+            name='name'
+            value="#{widget.name}")
+    p Widget Price:
+      input(type='text'
+            name='price'
+            value="#{widget.price}")
+    p
+      input(type='submit'
+            value='submit')

@@ -3,16 +3,21 @@
     id: 1,
     name: 'ololo',
     price: 100.0
+  },
+  {
+    id: 2,
+    name: 'oloscdclo',
+    price: 1030.0
   }
 ]
 
 
 exports.index=function(req,res){
- res.send(widgets);
+ res.render('widgets/index', {title:'Widgets', widgets: widgets});
 };
 
 exports.new=function(req,res){
-  res.send('form fow new widget')
+  res.render('widgets/new')
 }
 
 exports.show=function(req,res){
@@ -22,7 +27,7 @@ exports.show=function(req,res){
  }
  else
  {
-  res.send(widgets[indx])
+  res.render('widgets/show', {widget: widgets[indx]})
  }
 };
 
@@ -34,7 +39,7 @@ exports.create=function(req,res){
    price: parseFloat(req.body.price)
   }
   console.log('added widget');
-  res.send('Added widget to list')
+  res.render('widgets/added', {widget: widgets[indx-1], title: 'Added widget'})
 };
 
 exports.update=function(req,res){
@@ -57,5 +62,5 @@ exports.destroy=function(req,res){
 };
 
 exports.edit=function(req,res){
-  res.send('displaying edit form')
+  res.render('widgets/edit', {widget: widgets[req.params.id-1]})
 }

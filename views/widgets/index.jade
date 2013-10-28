@@ -1,0 +1,10 @@
+﻿extends layout
+
+block content
+  h1 #{title}
+  if widgets.length
+    each widget in widgets
+     if widget
+      include row
+  p 
+   a(href='/widgets/new') New widget
