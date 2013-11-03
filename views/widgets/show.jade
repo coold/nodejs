@@ -3,7 +3,7 @@ block content
   h1 #{widget.name}
   include widget
   form(method='POST'
-       action="/widgets/#{widget.id}")
+       action="/widgets/#{widget.sn}")
     input(type='hidden'
           name="_method"
           value='delete')

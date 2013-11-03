@@ -1,19 +1,11 @@
-﻿var widgets= [
-  {
-    id: 1,
-    name: 'ololo',
-    price: 100.0
-  },
-  {
-    id: 2,
-    name: 'oloscdclo',
-    price: 1030.0
-  }
-]
+﻿var Widget=require('../models/widgets.js');
 
 
 exports.index=function(req,res){
- res.render('widgets/index', {title:'Widgets', widgets: widgets});
+  Widget.find({},function(err,result){
+    console.log(result);
+ res.render('widgets/index', {title:'Widgets', widgets: result});
+})
 };
 
 exports.new=function(req,res){
@@ -21,46 +13,81 @@ exports.new=function(req,res){
 }
 
 exports.show=function(req,res){
- var indx=req.params.id-1;
- if(!widgets[indx]){
+  var sn=req.params.sn;
+  Widget.findOne({sn:sn},function(err,docs){
+
+
+ if(err){
   res.send('there is no such widget');
  }
  else
  {
-  res.render('widgets/show', {widget: widgets[indx]})
+  console.log(docs);
+  res.render('widgets/show', {widget: docs})
  }
+   });
 };
 
 exports.create=function(req,res){
-  var indx=widgets.length+1;
-  widgets[widgets.length]={
-   id: indx,
+  var widget={
+   sn: req.body.sn,
    name: req.body.name,
    price: parseFloat(req.body.price)
   }
+  var widgetObj=new Widget(widget);
+  widgetObj.save(function(err,data){
+    if(err)
+      {res.send(err);}
+    else
+    {
   console.log('added widget');
-  res.render('widgets/added', {widget: widgets[indx-1], title: 'Added widget'})
+  res.render('widgets/added', {widget: widget, title: 'Added widget'})
+  }
+  })
 };
 
 exports.update=function(req,res){
- var indx=req.params.id-1;
- if(!widgets[indx]){res.send('no such')}
-  else{
-   widgets[indx]={
-   id: parseInt(req.params.id),
+ var sn=req.params.sn;
+   var widget={
+   sn: req.body.sn,
    name: req.body.name,
    price: parseFloat(req.body.price)
   }
-  res.send('updated')
- }
+  Widget.update({sn:sn}, widget, function(err){
+    if(err){
+      res.send(err);
+    }
+    else
+    {
+      res.render('widgets/added',{widget: widget})
+    }
+  })
+
 };
 
 exports.destroy=function(req,res){
- var indx=req.params.id-1;
- delete widgets[indx];
- res.send('widget deleted')
+ var sn=req.params.sn;
+ Widget.remove({sn:sn},function(err,result){
+  if(err){
+    res.send(err);
+  }
+  else
+  {
+    res.send(sn+'deleted')
+  }
+ })
 };
 
 exports.edit=function(req,res){
-  res.render('widgets/edit', {widget: widgets[req.params.id-1]})
+  var sn=req.params.sn;
+  Widget.findOne({sn:sn},function(err,result){
+    if(err){
+      res.send(err);
+    }
+    else
+    {
+      res.render('widgets/edit', {widget: result})
+    }
+  })
+  
 }

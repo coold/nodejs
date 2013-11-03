@@ -2,10 +2,15 @@
 block content
   h1 Edit #{widget.name}
   form(method='POST'
-       action="/widgets/#{widget.id}")
+       action="/widgets/#{widget.sn}")
     input(type='hidden'
           name='_method'
           value='put')
+    p Widget sn:
+     input(type='text'
+           name='sn'
+           value='#{widget.sn}'
+           required)
     p Widget Name:
       input(type='text'
             name='name'

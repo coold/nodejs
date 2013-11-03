@@ -4,10 +4,12 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
+var mongoose=require('mongoose');
+var main = require('./main');
+var user = require('./main/user');
 var http = require('http');
 var path = require('path');
+var stat=require('./stats')
 var map=require('./maproutecontroller');
 var stylus=require('stylus');
 var app = express();
@@ -36,6 +38,14 @@ app.use(function(err,req,res,next){
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
+
+mongoose.connect('mongodb://127.0.0.1/WidgetDB');
+mongoose.connection.on('open',function(){
+	console.log('connected to MongoDb')
+})
+
+app.get('/',main.index);
+app.get('/stats',main.stats);
 
 var prefixes=['widgets'];
 prefixes.forEach(function(prefix){
